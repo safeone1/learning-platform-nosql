@@ -3,7 +3,7 @@
 // Question: Que se passe-t-il si une variable requise est manquante ?
 // Réponse : jai modifier que la validation dans un try catch pour controller l'erreur et quitter l'application
 
-const dotenv = require("dotenv");
+import dotenv from "dotenv";
 dotenv.config();
 
 const requiredEnvVars = ["MONGODB_URI", "MONGODB_DB_NAME", "REDIS_URI", "PORT"];
@@ -22,12 +22,12 @@ function validateEnv() {
 try {
   validateEnv();
   console.log("all env variables are valid");
-} catch (e) {
+} catch (e: any) {
   console.error("Failed to validate environment variables:", e.message);
   process.exit(1);
 }
 
-module.exports = {
+const config = {
   mongodb: {
     uri: process.env.MONGODB_URI,
     dbName: process.env.MONGODB_DB_NAME,
@@ -37,3 +37,5 @@ module.exports = {
   },
   port: process.env.PORT || 3000,
 };
+
+export default config;

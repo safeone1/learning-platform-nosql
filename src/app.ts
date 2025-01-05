@@ -1,8 +1,10 @@
 // Question: Comment organiser le point d'entrée de l'application ?
 // Question: Quelle est la meilleure façon de gérer le démarrage de l'application ?
 
-const express = require("express");
-const config = require("./config/env");
+import { Request, Response } from "express";
+
+import express from "express";
+import config from "./config/env";
 // const db = require("./config/db");
 
 // const courseRoutes = require("./routes/courseRoutes");
@@ -10,14 +12,16 @@ const config = require("./config/env");
 
 const app = express();
 
+app.use(express.json());
+
 async function startServer() {
   try {
     console.log("Starting server");
     // TODO: Initialiser les connexions aux bases de données
     // TODO: Configurer les middlewares Express
     // TODO: Monter les routes
-    app.get("/", (req, res) => {
-      route.send("Hello, World!");
+    app.get("/", (req: Request, res: Response) => {
+      res.send("hello");
     });
     // TODO: Démarrer le serveur
     app.listen(config.port, () => {

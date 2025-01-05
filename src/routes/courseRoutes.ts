@@ -1,15 +1,19 @@
 // Question: Pourquoi séparer les routes dans différents fichiers ?
-// Réponse : 
+// Réponse : Pour une meilleure organisation et une maintenance facilitée
 // Question : Comment organiser les routes de manière cohérente ?
-// Réponse: 
+// Réponse: par creer des middleware pour chaque type de route
 
-const express = require('express');
+import express from "express";
 const router = express.Router();
-const courseController = require('../controllers/courseController');
+import {
+  createCourse,
+  getCourse,
+  getCourseStats,
+} from "../controllers/courseController";
 
 // Routes pour les cours
-router.post('/', courseController.createCourse);
-router.get('/:id', courseController.getCourse);
-router.get('/stats', courseController.getCourseStats);
+router.post("/", createCourse);
+router.get("/stats", getCourseStats);
+router.get("/:id", getCourse);
 
-module.exports = router;
+export default router;

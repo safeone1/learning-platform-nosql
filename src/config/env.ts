@@ -6,7 +6,12 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-const requiredEnvVars = ["MONGODB_URI", "MONGODB_DB_NAME", "REDIS_URI", "PORT"];
+const requiredEnvVars = [
+  "DATABASE_URL",
+  "MONGODB_DB_NAME",
+  "REDIS_URI",
+  "PORT",
+];
 
 // Validation des variables d'environnement
 function validateEnv() {
@@ -29,11 +34,11 @@ try {
 
 const config = {
   mongodb: {
-    uri: process.env.MONGODB_URI,
-    dbName: process.env.MONGODB_DB_NAME,
+    uri: process.env.DATABASE_URL!,
+    dbName: process.env.MONGODB_DB_NAME!,
   },
   redis: {
-    uri: process.env.REDIS_URI,
+    uri: process.env.REDIS_URI!,
   },
   port: process.env.PORT || 3000,
 };

@@ -1,14 +1,10 @@
-// Question: Comment organiser le point d'entrée de l'application ?
-// Question: Quelle est la meilleure façon de gérer le démarrage de l'application ?
+import express, { Request, Response } from "express";
+import config from "./config/env"; // Assuming you have your env configuration here
+import dotenv from "dotenv";
+import router from "./routes/courseRoutes";
+import { connectMongo, disconnectMongoClient } from "./config/db";
 
-import { Request, Response } from "express";
-
-import express from "express";
-import config from "./config/env";
-// const db = require("./config/db");
-
-// const courseRoutes = require("./routes/courseRoutes");
-// const studentRoutes = require("./routes/studentRoutes");
+dotenv.config();
 
 const app = express();
 
@@ -16,14 +12,15 @@ app.use(express.json());
 
 async function startServer() {
   try {
-    console.log("Starting server");
-    // TODO: Initialiser les connexions aux bases de données
-    // TODO: Configurer les middlewares Express
-    // TODO: Monter les routes
+    console.log("Starting server...");
+    await connectMongo();
+
     app.get("/", (req: Request, res: Response) => {
-      res.send("hello");
+      res.send("Hello Samah Def");
     });
-    // TODO: Démarrer le serveur
+
+    app.use("/", router);
+
     app.listen(config.port, () => {
       console.log(`Server running on port ${config.port}`);
     });
@@ -33,9 +30,10 @@ async function startServer() {
   }
 }
 
-// Gestion propre de l'arrêt
 process.on("SIGTERM", async () => {
-  // TODO: Implémenter la fermeture propre des connexions
+  console.log("Received SIGTERM, shutting down gracefully...");
+  await disconnectMongoClient();
+  process.exit(0);
 });
 
 startServer();

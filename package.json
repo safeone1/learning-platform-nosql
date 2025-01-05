@@ -1,29 +1,34 @@
 {
   "name": "learning-platform-template",
   "version": "1.0.0",
-  "description": "Projet NoSQL, ENSET Mohammedia",
+  "description": "Pour ce projet, vous allez créer une petite API qui va servir de backend à une plateforme d'apprentissage en ligne. J'ai préparé la structure du projet avec une organisation professionnelle du code, comme vous pouvez le constater dans ce dépôt Github.",
   "main": "index.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon ./src/app.ts"
   },
-  "keywords": [
-    "MongoDB",
-    "Redis",
-    "GLSID, II-BDCC, II-CCN"
-  ],
-  "author": "Kandil Safouane",
+  "repository": "git+https://github.com/safeone1/nosql.git",
+  "keywords": [],
+  "author": "safeone1 <safeonekan@gmail.com>",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/safeone1/nosql/issues"
+  },
+  "homepage": "https://github.com/safeone1/nosql#readme",
   "dependencies": {
+    "@prisma/client": "^6.1.0",
+    "@types/node": "^22.10.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "mongo": "^0.1.0",
     "mongodb": "^6.12.0",
     "nodemon": "^3.1.9",
-    "redis": "^4.7.0"
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.10.5",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "@types/express": "^5.0.0"
   }
 }

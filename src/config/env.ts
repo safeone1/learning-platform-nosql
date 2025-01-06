@@ -9,7 +9,8 @@ dotenv.config();
 const requiredEnvVars = [
   "DATABASE_URL",
   "MONGODB_DB_NAME",
-  "REDIS_URI",
+  "REDIS_HOST",
+  "REDIS_PORT",
   "PORT",
 ];
 
@@ -38,7 +39,8 @@ const config = {
     dbName: process.env.MONGODB_DB_NAME!,
   },
   redis: {
-    uri: process.env.REDIS_URI!,
+    host: process.env.REDIS_HOST!,
+    port: parseInt(process.env.REDIS_PORT!),
   },
   port: process.env.PORT || 3000,
 };

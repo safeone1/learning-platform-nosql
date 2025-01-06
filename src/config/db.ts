@@ -5,8 +5,13 @@
 
 import { MongoClient } from "mongodb";
 import config from "./env";
-
+import Redis from "ioredis";
 const dbClient = new MongoClient(config.mongodb.uri);
+const redisClient = new Redis({
+  host: config.redis.host,
+  port: config.redis.port,
+  lazyConnect: true,
+});
 
 async function connectMongo() {
   try {
@@ -27,11 +32,31 @@ const disconnectMongoClient = async () => {
 };
 
 async function connectRedis() {
-  // TODO: Implémenter la connexion Redis
-  // Gérer les erreurs et les retries
+  try {
+    await redisClient.connect();
+    console.log("Connected to Redis");
+  } catch (err) {
+    console.error("Failed to connect to Redis:", err);
+  }
 }
+
+const disconnectRedisClient = async () => {
+  try {
+    await redisClient.quit();
+    console.log("Disconnected from Redis");
+  } catch (err) {
+    console.error("Failed to disconnect from Redis:", err);
+  }
+};
 
 // Export des fonctions et clients
 
 // TODO: Exporter les clients et fonctions utiles
-export { dbClient, connectMongo, disconnectMongoClient, connectRedis };
+export {
+  dbClient,
+  redisClient,
+  connectMongo,
+  disconnectMongoClient,
+  connectRedis,
+  disconnectRedisClient,
+};

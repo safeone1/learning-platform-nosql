@@ -2,7 +2,12 @@ import express, { Request, Response } from "express";
 import config from "./config/env"; // Assuming you have your env configuration here
 import dotenv from "dotenv";
 import router from "./routes/courseRoutes";
-import { connectMongo, disconnectMongoClient } from "./config/db";
+import {
+  connectMongo,
+  connectRedis,
+  disconnectMongoClient,
+  disconnectRedisClient,
+} from "./config/db";
 
 dotenv.config();
 
@@ -14,10 +19,7 @@ async function startServer() {
   try {
     console.log("Starting server...");
     await connectMongo();
-
-    app.get("/", (req: Request, res: Response) => {
-      res.send("Hello Samah Def");
-    });
+    await connectRedis();
 
     app.use("/", router);
 
@@ -33,6 +35,7 @@ async function startServer() {
 process.on("SIGTERM", async () => {
   console.log("Received SIGTERM, shutting down gracefully...");
   await disconnectMongoClient();
+  await disconnectRedisClient();
   process.exit(0);
 });
 

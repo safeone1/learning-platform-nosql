@@ -10,10 +10,19 @@ async function cacheData(key: string, data: any, ttl: number) {
   // TODO: Implémenter une fonction générique de cache
 
   try {
-    await redisClient.setex(key, ttl, JSON.stringify(data));
+    await redisClient.setex(key, ttl, data);
   } catch (err) {
     console.error("Failed to cache data:", err);
   }
 }
 
-export { cacheData };
+const getCachedData = async (key: string) => {
+  try {
+    const data = await redisClient.get(key);
+    return data ? JSON.parse(data) : null;
+  } catch (err) {
+    console.error("Failed to get cached data:", err);
+  }
+};
+
+export { cacheData, getCachedData };

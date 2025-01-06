@@ -8,7 +8,13 @@ services:
     volumes:
       - mongovol:/data/db
 
-    # restart: always
+  redisapp:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisvol:/data
+
   api:
     build: ./
     ports:
@@ -24,3 +30,4 @@ services:
 
 volumes:
   mongovol:
+  redisvol:

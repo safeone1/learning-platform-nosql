@@ -1,60 +1,186 @@
-# Projet de fin de module NoSQL
+# Learning Platform API Documentation
 
-Pour ce projet, vous allez créer une petite API qui va servir de backend à une plateforme d'apprentissage en ligne. J'ai préparé la structure du projet avec une organisation professionnelle du code, comme vous pouvez le constater dans ce dépôt Github.
+## Project Overview
 
-Commençons par l'organisation pratique :
+The Learning Platform API is a robust backend service designed to power an online learning management system. This API enables the creation, management, and delivery of educational content while handling user authentication, course management, and progress tracking.
 
-1. Création de votre dépôt :
-   - Sur Github.com
-   - Créez un nouveau dépôt public
-   - Nommez-le "learning-platform-nosql"
-   - Ne l'initialisez pas avec un README pour le moment
+### Technology Stack
 
-2. Configuration de votre environnement local :
+- **Node.js**: Runtime environment for executing JavaScript code
+- **Express**: Web application framework for handling HTTP requests
+- **TypeScript**: Adds static typing to JavaScript for better code quality
+- **MongoDB**: NoSQL database for storing course and user data
+- **Redis**: In-memory data store for caching and session management
+
+### Key Features
+
+- Course management (creation, updates, deletion)
+- User authentication and authorization
+- Content delivery and progress tracking
+- Performance optimization through caching
+- API rate limiting and security measures
+
+## Project Structure
+
+```
+src/
+├── config/
+│   ├── db.ts           # Database connection configuration
+│   ├── env.ts          # Environment variable validation
+│   └── types.ts        # TypeScript types and Zod schemas
+├── controllers/
+│   └── courseController.ts  # Course management logic
+├── routes/
+│   └── courseRoutes.ts    # Course management routes
+├── services/
+│   ├── mongoService.ts    # MongoDB operations
+│   └── redisService.ts    # Redis caching operations
+└── app.ts                 # Application entry point
+```
+
+## Installation and Setup
+
+### Docker Setup (Recommended)
+
+The application is containerized using Docker, making it easy to set up and run in any environment.
+
+#### Prerequisites
+
+- Docker
+- Docker Compose
+
+#### Docker Services
+
+1. **MongoDB Service (`mongoservice`)**
+
+   - Uses official MongoDB image
+   - Exposed on port 27017
+   - Persistent data storage using named volume `mongovol`
+
+2. **Redis Service (`redisapp`)**
+
+   - Uses official Redis image
+   - Exposed on port 6379
+   - Persistent data storage using named volume `redisvol`
+
+3. **API Service (`api`)**
+   - Built from local Dockerfile
+   - Exposed on port 3000
+   - Hot-reload enabled with volume mounting
+   - Dependencies handled through volume mounting
+
+#### Running with Docker Compose
+
+1. Clone the repository:
+
    ```bash
-   # Clonez mon dépôt template (ce dépôt)
-   git clone https://github.com/pr-daaif/learning-platform-template
-   
-   # Renommez le dépôt origin
-   cd learning-platform-template
-   git remote remove origin
-   
-   # Ajoutez votre dépôt comme nouvelle origine
-   git remote add origin https://github.com/[votre-compte]/learning-platform-nosql
-   
-   # Poussez le code vers votre dépôt
-   git push -u origin main
+   git clone https://github.com/safeone1/nosql.git
+   cd learning-platform-api
    ```
 
-3. Installation des dépendances :
+2. Create environment file:
+
    ```bash
-   npm install
+   cp .env.example .env
    ```
 
-Je vous propose une structure de code qui suit les bonnes pratiques de développement. Vous trouverez dans le code des commentaires avec des **questions qui vous guideront dans votre réflexion**. Ces questions sont importantes car elles vous aideront à comprendre les choix d'architecture.
+3. Configure environment variables in `.env`:
 
-### Aspects professionnels à noter :
-- Utilisation des variables d'environnement pour la configuration
-- Séparation claire des responsabilités (routes, contrôleurs, services)
-- Gestion propre des connexions aux bases de données
-- Organisation modulaire du code
-- Gestion des erreurs et des cas limites
-- Documentation du code
+   ```
+   DATABASE_URL="mongodb://mongoservice:27017/"
+   MONGODB_DB_NAME="SafeDb"
+   REDIS_HOST="redisapp"
+   REDIS_PORT="6379"
+   PORT="3000"
+   ```
 
-### Pour le rendu, voici ce que j'attends :
-1. Un dépôt public sur Github avec un historique de commits clair
-2. Un README.md qui explique :
-   - Comment installer et lancer le projet
-   - La structure du projet
-   - Les choix techniques que vous avez faits
-   - Les réponses aux questions posées dans les commentaires
-3. Le code complété avec tous les TODOs implémentés
+   Note: Use service names (`mongoservice` and `redisapp`) as hostnames instead of localhost.
 
-### Je vous conseille de procéder étape par étape :
-1. Commencez par lire et comprendre la structure du projet
-2. Répondez aux questions des commentaires dans le README
-3. Implémentez progressivement les TODOs
-4. Testez chaque fonctionnalité au fur et à mesure
-5. Documentez vos choix et vos réflexions en ajoutant des copies d'écrans à votre fichier README.md
+4. Start the services:
 
-#### Bon courage
+   ```bash
+   docker-compose up -d
+   ```
+
+5. View logs:
+   ```bash
+   docker-compose logs -f
+   ```
+
+#### Docker Compose Configuration
+
+```yaml
+version: "3.8"
+
+services:
+  mongoservice:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongovol:/data/db
+
+  redisapp:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisvol:/data
+
+  api:
+    build: ./
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongoservice
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - .env
+
+volumes:
+  mongovol:
+  redisvol:
+```
+
+#### Useful Docker Commands
+
+- Start services: `docker-compose up -d`
+- Stop services: `docker-compose down`
+- View logs: `docker-compose logs -f [service_name]`
+- Rebuild API: `docker-compose build api`
+- Rebuild and restart API: `docker-compose up -d --build api`
+- Remove volumes: `docker-compose down -v`
+
+## Development with Docker
+
+### Hot Reload
+
+The application uses volume mounting to enable hot reload during development:
+
+- Source code is mounted at `/usr/src/app`
+- `node_modules` are preserved in a named volume
+- Changes to local files are immediately reflected in the container
+
+### Debugging
+
+To access container shells:
+
+```bash
+# API container
+docker-compose exec api bash
+
+# MongoDB container
+docker-compose exec mongoservice mongo
+
+# Redis container
+docker-compose exec redisapp redis-cli
+```
+
+### Database Management
+
+- MongoDB data persists in `mongovol` volume
+- Redis data persists in `redisvol` volume
+- Volumes survive container restarts
+- Use `docker-compose down -v` to clean databases

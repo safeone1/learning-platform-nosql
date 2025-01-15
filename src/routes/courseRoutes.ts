@@ -8,10 +8,12 @@ const router = express.Router();
 import {
   createCourse,
   getCourse,
+  getCourses,
   getCourseStats,
 } from "../controllers/courseController";
 
 // Routes pour les cours
+router.get("/", getCourses);
 router.post("/", createCourse);
 router.get("/stats", getCourseStats);
 router.get("/:id", getCourse);

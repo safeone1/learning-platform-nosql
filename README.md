@@ -16,20 +16,39 @@ The Learning Platform API is a robust backend service designed to power an onlin
 ## Project Structure
 
 ```
-src/
-├── config/
-│   ├── db.ts           # Database connection configuration
-│   ├── env.ts          # Environment variable validation
-│   └── types.ts        # TypeScript types and Zod schemas
-├── controllers/
-│   └── courseController.ts  # Course management logic
-├── routes/
-│   └── courseRoutes.ts    # Course management routes
-├── services/
-│   ├── mongoService.ts    # MongoDB operations
-│   └── redisService.ts    # Redis caching operations
-└── app.ts                 # Application entry point
+/learning-platform-template
+├── docker-compose.yml
+├── Dockerfile
+├── image-2.png
+├── image-3.png
+├── node_modules
+├── package.json
+├── README.md
+├── src
+│   ├── app.ts
+│   ├── config
+│   │   ├── db.ts
+│   │   ├── env.ts
+│   │   └── types.ts
+│   ├── controllers
+│   │   └── courseController.ts
+│   ├── routes
+│   │   └── courseRoutes.ts
+│   └── services
+│       ├── mongoService.ts
+│       └── redisService.ts
+├── tsconfig.json
+└── yarn.lock
 ```
+
+### Accepted Routes
+
+The following routes are available for managing courses:
+
+- `GET /`: Get a list of all courses
+- `POST /`: Create a new course
+- `GET /stats`: Retrieve courses status
+- `GET /:id`: Get details of a specific course by ID
 
 ## Installation and Setup
 
@@ -177,3 +196,37 @@ docker-compose exec redisapp redis-cli
 - Redis data persists in `redisvol` volume
 - Volumes survive container restarts
 - Use `docker-compose down -v` to clean databases
+
+### Demo
+
+runing the docker compose
+
+![alt text](image-2.png)
+
+app is running on port 3000
+
+![alt text](image-3.png)
+
+get request to /
+
+![alt text](image.png)
+
+get request to /stats
+
+![alt text](image-1.png)
+
+get request to /:id with `id = 677b21e6f7d21c9080a2edd0`
+
+![alt text](image-4.png)
+
+Error detection using Zod
+
+![alt text](image-5.png)
+
+Post request to / to add course
+
+![alt text](image-6.png)
+
+checking redis cached data using redis insight
+
+![alt text](image-7.png)

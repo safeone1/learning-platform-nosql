@@ -10,7 +10,8 @@ async function cacheData(key: string, data: any, ttl: number) {
   // TODO: Implémenter une fonction générique de cache
 
   try {
-    await redisClient.setex(key, ttl, data);
+    const jsonData = JSON.stringify(data);
+    await redisClient.setex(key, ttl, jsonData);
   } catch (err) {
     console.error("Failed to cache data:", err);
   }

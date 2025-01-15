@@ -7,6 +7,24 @@ import config from "../config/env";
 import { CourseType } from "../config/types";
 import { cacheData, getCachedData } from "./redisService";
 
+const getallCourses = async () => {
+  try {
+    const cache = await getCachedData("courses");
+    if (cache) {
+      return cache;
+    }
+    const courses = await dbClient
+      .db(config.mongodb.dbName)
+      .collection("Course")
+      .find()
+      .toArray();
+    await cacheData("courses", courses, 60);
+    return courses;
+  } catch (error) {
+    console.error("Failed to get all courses:", error);
+  }
+};
+
 const addCourse = async ({ name, description, price, status }: CourseType) => {
   try {
     const course = await dbClient
@@ -74,4 +92,4 @@ const getStats = async () => {
 
 // Export des services
 
-export { findOneById, addCourse, getStats };
+export { getallCourses, findOneById, addCourse, getStats };

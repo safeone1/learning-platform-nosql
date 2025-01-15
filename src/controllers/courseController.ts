@@ -4,8 +4,26 @@
 // Réponse : Pour rendre le code plus lisible, facile à maintenir et à tester
 
 import { Request, Response } from "express";
-import { addCourse, findOneById, getStats } from "../services/mongoService";
+import {
+  addCourse,
+  findOneById,
+  getallCourses,
+  getStats,
+} from "../services/mongoService";
 import { CourseSchema } from "../config/types";
+
+async function getCourses(req: Request, res: Response): Promise<void> {
+  try {
+    console.log("Getting courses...");
+    const courses = await getallCourses();
+
+    if (courses)
+      res.status(200).json({ message: "Courses found", courses: courses });
+  } catch (error) {
+    console.error("Failed to get courses:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
 
 async function createCourse(req: Request, res: Response): Promise<void> {
   // TODO: Implémenter la création d'un cours
@@ -64,4 +82,4 @@ const getCourseStats = async (req: Request, res: Response) => {
   }
 };
 
-export { createCourse, getCourse, getCourseStats };
+export { createCourse, getCourses, getCourse, getCourseStats };

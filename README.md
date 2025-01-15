@@ -11,14 +11,7 @@ The Learning Platform API is a robust backend service designed to power an onlin
 - **TypeScript**: Adds static typing to JavaScript for better code quality
 - **MongoDB**: NoSQL database for storing course and user data
 - **Redis**: In-memory data store for caching and session management
-
-### Key Features
-
-- Course management (creation, updates, deletion)
-- User authentication and authorization
-- Content delivery and progress tracking
-- Performance optimization through caching
-- API rate limiting and security measures
+- **Zod** : Zod is a TypeScript-first schema declaration and validation library
 
 ## Project Structure
 
@@ -74,7 +67,7 @@ The application is containerized using Docker, making it easy to set up and run 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/safeone1/nosql.git
+   git clone https://github.com/safeone1/learning-platform-nosql.git
    cd learning-platform-api
    ```
 
